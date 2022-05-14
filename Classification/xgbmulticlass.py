@@ -10,6 +10,7 @@ def main():
     df["month"]=df.measured_at.dt.month
     df["hourofday"]=df.measured_at.dt.hour
     df["isnight"]=(df.hourofday >= 18) | (df.hourofday <=5)
+    df["highweek"]= (df.week == 14) | (df.week ==13) | (df.week == 5) | (df.week == 7) | (df.week == 37) | (df.week == 29) | (df.week==30) | (df.week == 31)
     df["isnoon"]=(df.hourofday >= 7) & (df.hourofday<=14)
     df["Error"]=df.error_category != "NO_ERROR"
     df["speed"]=(df.rotor_speed+df.generator_speed)
@@ -18,7 +19,7 @@ def main():
 
     xgb_attribs=['turbine_id', 'wind_speed', 'power','week',
        'temp_environment', 'temp_hydraulic_oil', 'temp_gear_bearing', 'cosphi',
-       'blade_angle_avg', 'hydraulic_pressure', 'park_id', 'month', 'speed', 'direction','isnight', 'isnoon']
+       'blade_angle_avg', 'hydraulic_pressure', 'park_id', 'month', 'speed', 'direction','isnight', 'isnoon','highweek']
 
     from sklearn.preprocessing import LabelEncoder
 
