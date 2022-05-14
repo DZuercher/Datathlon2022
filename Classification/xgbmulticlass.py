@@ -34,7 +34,7 @@ def main():
     from sklearn.model_selection import GridSearchCV
 
     xgb=XGBClassifier(objective="multi:softmax",use_label_encoder=False)
-    parameters={"n_estimators":[50,80,90,100,120,150,200], "learning_rate":[0.1,0.2,0.5], "max_depth":[4,6,7,8,9,10], "gamma":[0,0.1,0.3], "lambda":[0.5,1,1.5], "alpha":[0,0.02,0.1,0.5]}
+    parameters={"n_estimators":[50,80,90,100,120,150,200], "learning_rate":[0.1,0.2,0.5], "max_depth":[4,6,7,8,9,10], "gamma":[0,0.1,0.3],"alpha":[0,0.02,0.1,0.5]}
 
     xgb_cv=GridSearchCV(xgb, parameters, scoring="accuracy",cv=10)
     xgb_cv.fit(X_train_xgb,y_train_xgb)
