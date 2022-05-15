@@ -27,7 +27,7 @@ class SIB:
         self.df_train["hourofday"]=self.df_train.measured_at.dt.hour
         self.df_train["isnight"]=(self.df_train.hourofday >= 18) | (self.df_train.hourofday <=5)
         self.df_train["isnoon"]=(self.df_train.hourofday >= 7) & (self.df_train.hourofday<=14)
-        self.df_train["Error"]=self.df_train.error_category != "NO_ERROR"
+        #self.df_train["Error"]=self.df_train.error_category != "NO_ERROR"
         self.df_train["speed"]=(self.df_train.rotor_speed+self.df_train.generator_speed)
         self.df_train["direction"]=(self.df_train.nacelle_direction+self.df_train.wind_direction)
 
@@ -40,13 +40,14 @@ class SIB:
         self.xgbs = {}
         for at in self.missing_attributes:
             print(f"Building xgb for attribute {at}")
-            xgb_cv=XGBRegressor(n_estimators=97 , learning_rate=0.1, max_depth=7,gamma=0.1, alpha=0.0)
-            #params={"n_estimators":[32,64,90,100,150,200], "max_depth":[4,6,7,8,9],"learning_rate":[0.1,0.2,0.5],
-            #        "reg_lambda":[0,0.1,0.01], "gamma":[0,0.1,0.3], "alpha":[0,0.02,0.1,0.5]}
-            params={"n_estimators":[100], "learning_rate":[0.1], "max_depth":[6], "gamma":[0.1]}
+            xgb_cv=XGBRegressor(n_estimators=120 , learning_rate=0.1, max_depth=7,gamma=0.1, alpha=0.0)
+            # xgb=XGBRegressor()
+            # params={"n_estimators":[110,120,130], "max_depth":[7],"learning_rate":[0.1],
+            #         "gamma":[0.1], "alpha":[0.1]}
+            # params={"n_estimators":[100], "learning_rate":[0.1], "max_depth":[6], "gamma":[0.1]}
 
 
-            # xgb_cv=GridSearchCV(xgb, params, scoring='neg_mean_squared_error', cv=10)
+            # xgb_cv=GridSearchCV(xgb, params, scoring='neg_mean_squared_error', cv=5)
             # XGBClassifier(objective="multi:softmax",use_label_encoder=False, n_estimators=97 , learning_rate=0.1, max_depth=7,gamma=0.1, alpha=0.0)
 
 
@@ -56,7 +57,7 @@ class SIB:
             xgb_cv.fit(x, y)
             # print("Best parameters:", xgb_cv.best_params_ , ", Best CV MSE:", xgb_cv.best_score_)
             self.xgbs[at] = xgb_cv
-            with open(f'final_missing_{at}.pkl', 'wb+') as f:
+            with open(f'missing/final_missing_{at}.pkl', 'wb+') as f:
                 pickle.dump(xgb_cv, f)
 
         del self.df_train
